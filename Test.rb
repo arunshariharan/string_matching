@@ -11,8 +11,15 @@ File.foreach(File.expand_path("1liner.txt")) do |each_line|
   jokes << each_line.chomp
 end
 
-joke2 = []
+baby_jokes = []
+File.foreach(File.expand_path("babyjoke.txt")) do |each_line|
+  next if each_line.chomp.empty?
+  qnA = each_line.split('?')
+  answer = qnA[1].chomp if (qnA[1] != nil)
+  baby_jokes << [qnA[0].chomp, answer]
+end
 
+joke2 = []
 (jokes.size).times.each do |time|
   next if (time%2 != 0) && (time != 0)
   joke2 << [jokes[time], jokes[time + 1]]
@@ -23,10 +30,17 @@ db["parent"].to_a.each do |key, value|
   joke2.each do |item|    
     db["parent"][item[0]] = item[1]
     db["parent"][item[0]] = item[1]    
-  end  
+  end
 end
 
-test_sentence = "What do you call a guy w/ no arms or legs hanging on your wall?"
+db["parent"].to_a.each do |key, value|
+  baby_jokes.each do |item|    
+    db["parent"][item[0]] = item[1]
+    (item[1] == nil) ? (db["parent"][item[0]] = " Hahaha, that's actually a good joke!!") : (db["parent"][item[0]] = item[1])
+  end
+end
+
+test_sentence = "Mummy! Mummy! It's hot in here - can I come out?"
 stopwords = ["in", "the", "by", "guy", "a", "and", "with", "what", "do", "of", "you", "no", "or", "call", "if", "it's"]
 stop_filter = Stopwords::Filter.new stopwords
 filtered_sentence = stop_filter.filter test_sentence.downcase.split(' ')
